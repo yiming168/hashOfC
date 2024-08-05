@@ -5,7 +5,7 @@
 int main(int argc, char const *argv[])
 {
     hash *HT;
-    int data[] = {23, 34, 14, 38, 46, 16, 68, 15, 7, 31, 26};
+    int data[] = {23, 34, 14, 38, 46, 16, 68, 15, 23, 7, 31, 26};
     int i;
     datatype key;
     linklist r;
@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
         hash_insert(HT, data[i]);
     }
 
-    printf("input:");
+    printf("input a number to find:");
     scanf("%d", &key);
     r = hash_search(HT, key);
     if (r == NULL)

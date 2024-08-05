@@ -45,6 +45,12 @@ int hash_insert(hash *HT, datatype key)
     {
         q->next = p;
     }
+    else if (q->next->key == key)
+    {
+        printf("%d aready exists, insertion of %d failed\n", q->next->key, p->key);
+        free(p);
+        p = NULL;
+    }
     else
     {
         p->next = q->next;
