@@ -12,7 +12,7 @@ hash *hash_create()
         return NULL;
     }
 
-    memset(HT, 0, sizeof(hash));
+    memset(HT->hashdata, 0, sizeof(HT->hashdata));
     return HT;
 }
 
@@ -44,20 +44,21 @@ int hash_insert(hash *HT, datatype key)
     if (q->next == NULL)
     {
         q->next = p;
+        return 0;
     }
     else if (q->next->key == key)
     {
         printf("%d aready exists, insertion of %d failed\n", q->next->key, p->key);
         free(p);
         p = NULL;
+        return -1;
     }
     else
     {
         p->next = q->next;
         q->next = p;
+        return 0;
     }
-
-    return 0;
 }
 
 linklist hash_search(hash *HT, datatype key)
@@ -72,13 +73,14 @@ linklist hash_search(hash *HT, datatype key)
     {
         p = p->next;
     }
-    if (p->next->key == key)
+
+    if (p->next == NULL || p->next->key != key)
     {
-        return p->next;
+        return NULL;
     }
     else
     {
-        return NULL;
+        return p->next;
     }
 }
 
@@ -90,20 +92,17 @@ void hash_free(hash *HT)
 
     for (int i = 0; i < N; i++)
     {
-        if (&(HT->hashdata[i % N]) != NULL)
+        p = HT->hashdata[i].next;
+        while (p)
         {
-            p = &(HT->hashdata[i % N]);
-            q = p->next;
-            free(p);
-            while (q)
-            {
-                p = q;
-                q = q->next;
-                printf("free %d\n", p->key);
-                free(p);
-            }
+            q = p;
+            p = p->next;
+            printf("free %d\n", q->key);
+            free(q);
         }
     }
+    free(HT);
+    HT = NULL;
 }
 
 int hash_delete(hash *HT, datatype key)
@@ -119,7 +118,13 @@ int hash_delete(hash *HT, datatype key)
     {
         p = p->next;
     }
-    if (p->next->key == key)
+
+    if (p->next == NULL || p->next->key != key)
+    {
+        printf("Didn't found %d for deletion\n", key);
+        return -1;
+    }
+    else
     {
         linklist q = p->next;
         p->next = q->next;
@@ -127,10 +132,5 @@ int hash_delete(hash *HT, datatype key)
         free(q);
         q = NULL;
         return 0;
-    }
-    else
-    {
-        printf("Didn't found %d for deletion", key);
-        return -1;
     }
 }
