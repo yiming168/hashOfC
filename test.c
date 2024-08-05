@@ -28,5 +28,7 @@ int main(int argc, char const *argv[])
     else
         printf("found %d %d\n", key, r->key);
 
+    hash_free(HT);
+
     return 0;
 }

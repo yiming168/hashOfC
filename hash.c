@@ -75,3 +75,27 @@ linklist hash_search(hash *HT, datatype key)
         return p->next;
     }
 }
+
+void hash_free(hash *HT)
+{
+    linklist p, q;
+    if (HT == NULL)
+        return;
+
+    for (int i = 0; i < N; i++)
+    {
+        if (&(HT->hashdata[i % N]) != NULL)
+        {
+            p = &(HT->hashdata[i % N]);
+            q = p->next;
+            free(p);
+            while (q)
+            {
+                p = q;
+                q = q->next;
+                printf("free %d\n", p->key);
+                free(p);
+            }
+        }
+    }
+}
