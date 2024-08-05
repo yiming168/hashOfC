@@ -72,13 +72,13 @@ linklist hash_search(hash *HT, datatype key)
     {
         p = p->next;
     }
-    if (p->next == NULL || p->next->key != key)
+    if (p->next->key == key)
     {
-        return NULL;
+        return p->next;
     }
     else
     {
-        return p->next;
+        return NULL;
     }
 }
 
@@ -103,5 +103,34 @@ void hash_free(hash *HT)
                 free(p);
             }
         }
+    }
+}
+
+int hash_delete(hash *HT, datatype key)
+{
+    if (HT == NULL)
+    {
+        printf("HT is NULL\n");
+        return -1;
+    }
+
+    linklist p = &(HT->hashdata[key % N]);
+    while (p->next && p->next->key < key)
+    {
+        p = p->next;
+    }
+    if (p->next->key == key)
+    {
+        linklist q = p->next;
+        p->next = q->next;
+        printf("Delete %d\n", key);
+        free(q);
+        q = NULL;
+        return 0;
+    }
+    else
+    {
+        printf("Didn't found %d for deletion", key);
+        return -1;
     }
 }
